@@ -1,0 +1,74 @@
+- Delete, DTOs | update
+
+- Orders
+- Payment Gateway
+- Pagination, Filter, Search
+- Redis
+- AWS
+
+
+
+- update category
+- make create prod server loosely coupled
+- create category mapper
+- at all places use mapper, don't use .set...
+
+- exception handling, in all the GET, PUT, DELETE calls, (where ever we are trying to get some data from database)
+- there is a chance of that data not being present, so throw exception
+
+
+id,
+userId - entity,
+list<product> - entity
+total amount,
+status
+
+order - product (Many to Many)
+new table
+
+
+order - user (Many to one)
+save userId in order
+
+m : 1
+1 : m
+save lower into many side
+
+m : m
+new table with
+o_p table
+
+
+id, name, email, phone, gender
+
+
+
+
+
+REST TEMPLATE - spring framework
+it is a class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
