@@ -38,6 +38,16 @@ public class StripePaymentService implements PaymentService{
                                         .setQuantity(1L)
                                         .build()
                         )
+                        .setAfterCompletion(
+                                PaymentLinkCreateParams.AfterCompletion.builder()
+                                        .setType(PaymentLinkCreateParams.AfterCompletion.Type.REDIRECT)
+                                        .setRedirect(
+                                                PaymentLinkCreateParams.AfterCompletion.Redirect.builder()
+                                                        .setUrl("http://localhost:3000")
+                                                        .build()
+                                        )
+                                        .build()
+                        )
                         .build();
 
         PaymentLink paymentLink;
