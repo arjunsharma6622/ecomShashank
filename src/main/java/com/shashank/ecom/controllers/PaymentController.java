@@ -4,10 +4,9 @@ import com.shashank.ecom.Exceptions.OrderNOtFoundException;
 import com.shashank.ecom.Services.PaymentService;
 import com.shashank.ecom.models.Order;
 import com.stripe.exception.StripeException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import com.stripe.model.Event;
+import com.stripe.net.Webhook;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
@@ -30,6 +29,20 @@ public class PaymentController {
         paymentLink = paymentService.getPaymentLink(orderId, orderFromDB.getPrice(), orderFromDB.getUser().getEmail());
 
         return paymentLink;
+    }
+
+    @PostMapping("/payment/webhook")
+    public void handleWebhook(
+            @RequestBody String payload,
+            @RequestHeader("Stripe-Signature") String signatureHeader
+    ){
+        try{
+            Event event = Webhook.constructEvent(payload, signatureHeader, "whsec_c6ebc1426a1e4b70bf788a21f61aac7d686094f0be41c45d6b4c8784f060fb13");
+            System.out.println(event.getType());
+        }
+        catch (Exception e){
+            System.out.println("Error " + e.getMessage());
+        }
     }
 
 }

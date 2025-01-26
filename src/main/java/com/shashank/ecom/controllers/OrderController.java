@@ -18,8 +18,7 @@ public class OrderController {
 	public OrderController(OrderService OrderService) {
 		this.OrderService = OrderService;
 	}
-	
-	
+
 	@GetMapping("/order/{id}")
 	public Order GetSingleOrder(@PathVariable("id") long id) {
 		Order SingleOrder;

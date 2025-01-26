@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.shashank.ecom.DTO.ProductDTO;
@@ -54,9 +57,18 @@ public class ProductService {
 		return productDTO;
 	}
 	
-	public List<ProductDTO> GetAllProducts(){
-		List<Product> ProductFromDB ;
-		ProductFromDB = productRepository.findAll();
+	public List<ProductDTO> GetAllProducts(int page, int limit, String sortby){
+		Page<Product> ProductFromDB ;
+		ProductFromDB = productRepository.findAll(
+				PageRequest.of(
+						page,
+						limit,
+						Sort.by(sortby).descending()
+				)
+		);
+
+		System.out.println(ProductFromDB.getPageable().toString());
+
 		List<ProductDTO> productDTOS = new ArrayList<>();
 		
 		for(Product p : ProductFromDB) {

@@ -3,7 +3,9 @@
 - Orders
 - Payment Gateway
 - Pagination, Filter, Search
+
 - Redis
+
 - AWS
 
 
@@ -57,12 +59,18 @@ it is a class
 
 
 
+pagination
+
+page - what page are you at?
+limit - 20
+sort by -
+    - asc or desc
 
 
 
 
 
-
+/products?page=1&limit=2&sortby=price
 
 
 
