@@ -73,7 +73,29 @@ sort by -
 /products?page=1&limit=2&sortby=price
 
 
+RAM - primary storage
 
+key : val - RAM
 
+server(cache) - redis (key : val pairs - "key:val")
+- cache hit - if data found in cache
+- cache miss - if data not found in cache
+- eviction policy - 10 GB
+    if 10 GB full, and trying to add new data
+    - add new - remove old
+    - reject incoming - X
 
+client              server              DB (server)
+            x                    2y          z
+            x
 
+2x+2y+z
+
+redis stack server - jedisconnectionfactory
+redis template
+
+// serializer article
+https://medium.com/@betul5634/redis-serialization-with-spring-redis-data-lettuce-codec-1a1d2bc73d26
+
+// connection article
+https://medium.com/turkcell/making-first-connection-to-redis-with-java-application-spring-boot-4fc58e6fa173

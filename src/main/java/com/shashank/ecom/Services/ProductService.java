@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.shashank.ecom.DTO.ProductDTO;
@@ -24,15 +26,30 @@ public class ProductService {
 	ProductRepository productRepository;
 	CategoryRepository categoryRepository;
 	ProductMapper productMapper;
+	RedisTemplate<String, Object> redisTemplate;
 	
-	public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper, CategoryService categoryService) {
+	public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper, CategoryService categoryService, RedisTemplate<String, Object> redisTemplate) {
 		this.productRepository = productRepository;
 		this.categoryRepository = categoryRepository;
 		this.productMapper = productMapper;
 		this.categoryService = categoryService;
+		this.redisTemplate = redisTemplate;
 	}
-	
-	public ProductDTO GetProduct(Long id) throws ProductNotFoundException{
+
+	public Product GetProduct(Long id) throws ProductNotFoundException{
+
+		System.out.println("Enterred get prod");
+		// go to redis first
+		Product pFromCache = (Product) redisTemplate.opsForHash().get("PRODUCT_"+id, id);
+		System.out.println("done with pfromcache");
+
+		// cache hit
+		if(pFromCache != null){
+			return pFromCache;
+		}
+
+		// cache miss
+
 		Optional<Product> GetASingleProductById;
 		GetASingleProductById = productRepository.findById(id);
 		
@@ -44,17 +61,13 @@ public class ProductService {
 		else {
 			SingleProduct = GetASingleProductById.get();
 		}
-		
-		ProductDTO productDTO;
-		productDTO = new ProductDTO();
-		
-		productDTO.setId(SingleProduct.getId());
-		productDTO.setName(SingleProduct.getName());
-		productDTO.setPrice(SingleProduct.getPrice());
-		productDTO.setImage(SingleProduct.getImage());
-		productDTO.setCategoryName(SingleProduct.getCategory().getName());
-		
-		return productDTO;
+
+		// first save in cache, and then return
+		System.out.println("got product from DB");
+		redisTemplate.opsForHash().put("PRODUCT_"+id, id, SingleProduct);
+		System.out.println("saved in cache");
+
+		return SingleProduct;
 	}
 	
 	public List<ProductDTO> GetAllProducts(int page, int limit, String sortby){

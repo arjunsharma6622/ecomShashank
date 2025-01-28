@@ -3,6 +3,7 @@ package com.shashank.ecom.controllers;
 
 import java.util.List;
 
+import com.shashank.ecom.models.Product;
 import org.springframework.web.bind.annotation.*;
 
 import com.shashank.ecom.DTO.ProductDTO;
@@ -25,9 +26,9 @@ public class ProductController {
 	public ProductDTO GetProduct(@PathVariable("id") Long id)
 	{
 
-		ProductDTO prfdb = ProductService.GetProduct(id);
-		
-		return prfdb;
+		Product productFromDB = ProductService.GetProduct(id);
+
+		return productMapper.toProductDTO(productFromDB);
 	}
 
 	@GetMapping("/product")
